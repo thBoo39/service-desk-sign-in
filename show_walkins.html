@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <script src="sketch.js"></script>
+</head>
+<body onload = "get()">
+	<div id = "head_form">
+  <header class = "w3-container w3-teal">
+    <H1 style="text-align: center">G6 HelpDesk</H1>
+  </header>
+  <div style="margin:auto; width:66%; ">
+  </div>
+	</div>
+  <br></br>
+  <div class = "w3-panel w3-border w3-light-grey" style="overflow-y: auto; ">
+		<h3 style = "float:left" id = "walk-in_date"> Walk-Ins Today </h3>
+		<p style = "float:right" id = "walk-in_count">Count</p>
+		<table class = "w3-table w3-border w3-hoverable" id = "table_checkins">
+			<thead>
+			<tr>
+				<th>Time</th>
+				<th>Name</th>
+				<th>Unit</th>
+				<th>Phone</th>
+				<th>Issue</th>
+			</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<button onclick = "saveToFile()"> Download </button>
+  </div>
+  <footer class = "w3-container w3-teal w3-bottom">
+    <h5></h5>
+  </footer>
+
+</body>
+</html>

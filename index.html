@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="styles.css">
+  <script src="sketch.js"></script>
+</head>
+<body onload = "get()">
+	<div id = "head_form">
+  <header class = "w3-container w3-teal">
+    <H1 style="text-align: center">G6 HelpDesk</H1>
+    <H2 style="text-align: center">Please sign in</H2>
+  </header>
+  <div style="margin:auto; width:66%; ">
+  <div class = "w3-container">
+		<p id = "form_message" style="height:20px; text-align: center"></p>
+    <label class = "w3-text-deep-orange" ><b>Name</b></label><br>
+    <input class = "w3-input w3-border" type = "text" id = "input_name" autocomplete="off" onclick = "clearFormMessage()" maxlength = "32"/><br>
+    <label class = "w3-text-deep-orange"><b>Unit</b></label><br>
+    <input class = "w3-input w3-border" type = "text" id = "input_unit" onclick = "clearFormMessage()" maxlength = "32"/><br>
+    <label class = "w3-text-deep-orange"><b>Phone Number</b></label><br>
+    <input class = "w3-input w3-border" type = "text" id = "input_phone" onclick = "clearFormMessage()"maxlength = "32"/><br>
+    <label class = "w3-text-deep-orange"><b>Issues</b></label><br>
+    <input class = "w3-input w3-border" type = "text" id = "input_issue" onclick = "clearFormMessage()"maxlength = "128"/><br>
+    <button class = "w3-btn w3-deep-orange" onclick = "save()"> SUBMIT </button>
+		<button class = "w3-btn w3-deep-orange" onclick = "clearForm()"> CLEAR </button>
+  </div>
+  </div>
+	</div>
+  <br></br>
+  <div class = "w3-panel w3-border w3-light-grey" style="overflow-y: auto; ">
+		<h3 style = "float:left" id = "walk-in_date"> Walk-Ins Today </h3>
+		<p style = "float:right" id = "walk-in_count">Count</p>
+		<table class = "w3-table w3-border w3-hoverable" id = "table_checkins">
+			<thead>
+			<tr>
+				<th>Time</th>
+				<th>Name</th>
+				<th>Unit</th>
+				<th>Phone</th>
+				<th>Issue</th>
+			</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+  </div>
+  <footer class = "w3-container w3-teal w3-bottom">
+    <h5></h5>
+  </footer>
+
+</body>
+</html>
