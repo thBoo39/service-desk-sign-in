@@ -7,7 +7,7 @@
 <body onload = "get()">
 	<div id = "head_form">
   <header class = "w3-container w3-teal">
-    <H1 style="text-align: center">G6 HelpDesk</H1>
+    <H1 style="text-align: center">Welcome to Help Desk</H1>
     <H2 style="text-align: center">Please sign in</H2>
   </header>
   <div style="margin:auto; width:66%; ">
@@ -15,7 +15,7 @@
 		<p id = "form_message" style="height:20px; text-align: center"></p>
     <label class = "w3-text-deep-orange" ><b>Name</b></label><br>
     <input class = "w3-input w3-border" type = "text" id = "input_name" autocomplete="off" onclick = "clearFormMessage()" maxlength = "32"/><br>
-    <label class = "w3-text-deep-orange"><b>Unit</b></label><br>
+    <label class = "w3-text-deep-orange"><b>Department</b></label><br>
     <input class = "w3-input w3-border" type = "text" id = "input_unit" onclick = "clearFormMessage()" maxlength = "32"/><br>
     <label class = "w3-text-deep-orange"><b>Phone Number</b></label><br>
     <input class = "w3-input w3-border" type = "text" id = "input_phone" onclick = "clearFormMessage()"maxlength = "32"/><br>
@@ -35,9 +35,9 @@
 			<tr>
 				<th>Time</th>
 				<th>Name</th>
-				<th>Unit</th>
+				<th>Department</th>
 				<th>Phone</th>
-				<th>Issue</th>
+				<th>Reason</th>
 			</tr>
 			</thead>
 			<tbody>

@@ -1,5 +1,5 @@
 const FORM_ROW_ID = ["input_name", "input_unit", "input_phone", "input_issue"];
-const HEADERS = [["Time", "Name", "Unit", "Phone", "Issue"]];
+const HEADERS = [["Time", "Name", "Organization", "Phone", "Reason"]];
 let Data = [];
 
 window.addEventListener("storage", refreshTable);
