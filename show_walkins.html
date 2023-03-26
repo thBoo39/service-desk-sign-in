@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <title>Walk-In Internal</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="styles.css">
   <script src="sketch.js"></script>
 </head>
-<body onload = "get()">
+<body onload = "setup()">
 	<div id = "head_form">
-  <header class = "w3-container w3-teal">
-    <H1 style="text-align: center">Help Desk</H1>
-  </header>
-  <div style="margin:auto; width:66%; ">
-  </div>
+  		<header class = "w3-container w3-teal">
+    		<H1 id = "h1_title" style="text-align: center"></H1>
+  		</header>
+  		<div style="margin:auto; width:66%; ">
+  		</div>
 	</div>
   <br></br>
   <div class = "w3-panel w3-border w3-light-grey" style="overflow-y: auto; ">
@@ -19,14 +22,11 @@
 		<table class = "w3-table w3-border w3-hoverable" id = "table_checkins">
 			<thead>
 			<tr>
-				<th>Time</th>
-				<th>Name</th>
-				<th>Department</th>
-				<th>Phone</th>
-				<th>Reason</th>
+				<!-- dynamically added -->
 			</tr>
 			</thead>
 			<tbody>
+				<!-- dynamically added -->
 			</tbody>
 		</table>
 		<button onclick = "saveToFile()"> Download </button>
