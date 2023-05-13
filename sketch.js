@@ -3,25 +3,36 @@ const TIME_DOWNLOAD = {hour: 17, min: 23};
 // Title and Subtitle (subtitle only available in user facing page)
 const StrTitle = "Service Desk";
 const StrSubTitle = "Please sign in";
-// Form Items (type, name visibility (in user interface))
+// Dropdown Items
+const DRPDWN_ITEM = {
+	"Category": ["", "Pickup", "Phone", "Email"],
+	"Technician": ["", "Chicken", "Summy"]
+}
+// Form Items (type, name, visibility (in form))
 // type includes time, text, checkbox, and dropdown
-// only 1 checkbox and 1 dropdown can be used
+// only 1 checkbox can be used
+// if adding a dropdown, a dropdown item needs to be added above (DRPDWN_ITEM)
+// variable to store form ID
+let var_form_id = 0;
 const FORM_ITEM = [
 	new createFormItem("time", "Time", false),
 	new createFormItem("text", "Name", true),
 	new createFormItem("text", "Organization", true),
 	new createFormItem("text", "Phone Number", true),
 	new createFormItem("text", "Reason for Visit", true),
+	new createFormItem("dropdown", "Category", false),
 	new createFormItem("dropdown", "Technician", false),
 	new createFormItem("checkbox", "Resolved", false)
 ]
-const DRPDWN_ITEM = [
-	"", "Chicken", "Summy"
-]
 // container to keep data
 let Data = [];
+// variable to store table ID
+let var_table_id;
+// container to store form inputs
+let Form_item_container = [];
 
 function createFormItem (type, name, visiblity){
+	this.id = var_form_id++;
 	this.type = type;
 	this.name = name;
 	this.visiblity = visiblity;
@@ -35,9 +46,12 @@ function setup() {
 	let h2 = document.getElementById("h2_title");
 	if(h2){
 		h2.innerHTML = StrSubTitle;
+		var_table_id = (document.getElementById("table_checkins"));
+	} else {
+		var_table_id = (document.getElementById("table_checkins_internal"));
 	}
+	let table = var_table_id;
 	let container = document.getElementById("label_container");
-	let table = document.getElementById("table_checkins");
 	let row = table.tHead.children[0];
 	for (let i = 0; i < FORM_ITEM.length; i++) {
 		// Prepare Table Headers
@@ -63,9 +77,10 @@ function setup() {
 				container.appendChild(document.createElement("BR"));
 				container.appendChild(input);
 				container.appendChild(document.createElement("BR"));
+				Form_item_container.push(input);	
 			}
 		}
-	}
+	}	
 	// load stored data
 	getStoredData();
 	// auto download and refresh, every day
@@ -134,7 +149,8 @@ function clearData() {
 
 // update Data value reflecting checked items
 function setDataChecked() {
-	let tbl = document.getElementById("table_checkins");
+	// let tbl = document.getElementById("table_checkins");
+	let tbl = var_table_id;
 	let tblBody = tbl.getElementsByTagName('tbody')[0];
 	let chkbox = tblBody.getElementsByTagName("input");
 	for(i = 0; i < chkbox.length; i++) {
@@ -145,19 +161,15 @@ function setDataChecked() {
 }
 
 // update Data value reflecting dropdown items
-function setDataDropdown() {
-	let tbl = document.getElementById("table_checkins");
-	let tblBody = tbl.getElementsByTagName('tbody')[0];
-	let dropdown = tblBody.getElementsByTagName("select");
-	for(i = 0; i < dropdown.length; i++) {
-		let dataDropdown = Data[Data.length - 1 - i].find(item => item.type == "dropdown");
-		dataDropdown.value = dropdown[i].value
-	}
+function setDataDropdown(evt) {
+	let tblRowIndex = evt.target.parentElement.parentElement.rowIndex;
+	let dataTarget = Data[Data.length-tblRowIndex].find(item => item.name == evt.target.name);
+	dataTarget.value = evt.target.value;
 	localStorage.setItem("storedData", JSON.stringify(Data));
 }
 
 function insertItemToRow(Item){
-	let row = document.getElementById("table_checkins").getElementsByTagName('tbody')[0].insertRow(0);
+	let row = var_table_id.getElementsByTagName('tbody')[0].insertRow(0);
 	Item.forEach((item, index) => {
 		if(item.type == "checkbox"){
 			let checkbox = document.createElement("INPUT");
@@ -166,11 +178,11 @@ function insertItemToRow(Item){
 			checkbox.checked = item.checked;
 			row.insertCell().appendChild(checkbox);
 		} else if(item.type == "dropdown"){
-			let selectedItem = DRPDWN_ITEM.findIndex(x => x == item.value);
+			let selectedItem = DRPDWN_ITEM[item.name].findIndex(x => x == item.value);
 			let dropdown = document.createElement("SELECT");
 			dropdown.name = item.name;
 			dropdown.onchange = setDataDropdown;
-			DRPDWN_ITEM.forEach((item, index) => {
+			DRPDWN_ITEM[item.name].forEach((item, index) => {
 				let option = document.createElement("OPTION");
 				option.value = item;
 				option.innerHTML = item;
@@ -185,16 +197,14 @@ function insertItemToRow(Item){
 	});
 }
 
-function saveForm(){
+function addForm(){
 	// read form data
 	let {date, time, dateTime} = getCurrnetTime();
 	let Item = [];
 	// if one of field is empty, reject saving the form
 	let empty_field = false;
-	let container = document.getElementById("label_container");
-	let inputNodes = container.getElementsByTagName("INPUT");
-	for (let i = 0; i < inputNodes.length; i++) {
-		if(inputNodes[i].value == ""){
+	for(let item of Form_item_container){
+		if(item.value == ""){
 			empty_field = true;
 			break;
 		}
@@ -203,37 +213,27 @@ function saveForm(){
 		document.getElementById("form_message").innerHTML = "Please fill out empty form";
 		callInTenSeconds();
 		return false;
-	} else {
-		// read all form data
-		let inputNodesNo = 0;
-		for (let i = 0; i < FORM_ITEM.length; i++) {
-			if(FORM_ITEM[i].type == "time"){
-				Item.push({
-					"type": FORM_ITEM[i].type,
-					"value": time,
-					"checked": false
-				});
-			} else if(FORM_ITEM[i].type == "text"){
-				Item.push({
-					"type": FORM_ITEM[i].type,
-					"value": inputNodes[inputNodesNo].value,
-					"checked": false
-				});
-				inputNodesNo += 1;
-			} else if(FORM_ITEM[i].type == "checkbox"){
-				Item.push({
-					"type": FORM_ITEM[i].type,
-					"value": "",
-					"checked": false
-				});
-			} else if (FORM_ITEM[i].type == "dropdown"){
-				Item.push({
-					"type": FORM_ITEM[i].type,
-					"value": "",
-					"checked": false
-				});
-			}
+	}
+	let nodeNo = 0;
+	let value = "";
+	for(let item of FORM_ITEM){
+		console.log(item);
+		if(item.visiblity) {
+			console.log(Form_item_container[nodeNo].value);
+			value = Form_item_container[nodeNo].value;
+			nodeNo++;
+		} else if(item.type == "time"){
+			value = time;
+		} else {
+			value = "";
 		}
+		Item.push({
+			"id": item.id,
+			"type": item.type,
+			"name": item.name,
+			"value": value,
+			"checked": false
+		});
 	}
 	Data.push(Item);
 	localStorage.setItem("storedData", JSON.stringify(Data));
@@ -269,6 +269,7 @@ function saveToFile() {
 	let data = [];
 	Data.forEach((row, index) => {
 		let rowData = [];
+		row.splice(0, 0, {type: 'text', value: date});
 		row.forEach((item, index) => {
 			if(item.type == "text"){
 				rowData.push(item.value);
@@ -287,6 +288,7 @@ function saveToFile() {
 	for(i = 0; i < FORM_ITEM.length; i++){
 		headers[0].push(FORM_ITEM[i].name);
 	}
+	headers[0].splice(0, 0, "Date");
 	// create csv and export to file
 	let csv = arrayToCsv(headers)+'\r\n'+arrayToCsv(data);
 	downloadBlob(csv, `${date}_${Data.length}_tickets.csv`, 'text/csv;charset=utf-8;');
